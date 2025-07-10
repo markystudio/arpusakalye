@@ -37,18 +37,19 @@ Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
   console.log("🔑 API Key present:", !!apiKey);
 
   try {
-    const response = await axios.post("https://api.venice.ai/v1/chat/completions", {
-      model: "llama-3-8b-instruct",
-      messages: [
-        { role: "system", content: "You are a helpful assistant." },
-        { role: "user", content: "Hello!" }
-      ]
-    }, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      }
-    });
+   const response = await axios.post("https://api.venice.ai/v1/chat/completions", {
+  model: "gpt-3.5-turbo", // fallback model
+  messages: [
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "Hello!" }
+  ]
+}, {
+  headers: {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json"
+  }
+});
+
 
     const reply = response.data.choices[0].message.content;
     console.log("🤖 Venice replied:", reply);
