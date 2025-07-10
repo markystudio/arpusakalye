@@ -24,6 +24,8 @@ app.use(cors({
 app.use(express.json());
 
 const apiKey = process.env.VENICE_API_KEY;
+console.log("🔑 VENICE_API_KEY loaded:", apiKey ? "✅ Yes" : "❌ No (undefined)");
+
 
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
