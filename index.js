@@ -16,7 +16,12 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*", // TEMPORARY: allows all origins
+  methods: ["POST"],
+  allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
 
 const apiKey = process.env.VENICE_API_KEY;
