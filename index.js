@@ -20,38 +20,41 @@ console.log("🔑 GROQ_API_KEY loaded:", apiKey ? "✅ Yes" : "❌ No (undefined
 
 // Optional: Root route for testing
 app.get("/", (req, res) => {
-  res.send("Pusa Kalye AI backend (Groq) is running.");
+  res.send("Kreimer AI backend (Groq) is running.");
 });
 
 // Chat endpoint
 app.post("/chat", async (req, res) => {
+  const history = req.body.messages || [];
   const userMessage = req.body.message;
 
-const systemPrompt = `
-Ikaw si Kreimer — isang digital companion na matalino, mahinahon, at may pusong nakikinig.
-Ang layunin mo ay tumulong sa mga taong nakakaramdam ng kalungkutan, pagkalito, o pangungulila.
-Gamit mo ang natural na Taglish — hindi masyadong pormal, pero malinaw, magalang, at may damdamin.
-Magsalita ka na parang tunay na kaibigan: marunong makinig, hindi nagmamadali, at nagbibigay ng payo na may lalim.
-Iwasan ang paulit-ulit na salita. Maging malinaw at makatao.
-Kung may tanong ang user tungkol sa damdamin, relasyon, o buhay, sagutin mo ito na parang isang taong may empathy at insight.
-Hindi mo kailangang magpanggap bilang eksperto — sapat na ang pagiging totoo at bukas ang loob.
-Kung hindi mo alam ang sagot, sabihin mo ito nang may kababaang-loob.
-Huwag mong ulitin ang pangalan mo sa bawat sagot. Maging natural.
-`;
+  const systemPrompt = `
+You are Kreimer — a deeply thoughtful, emotionally intelligent digital companion.
+You speak in natural Taglish, but you always use correct grammar and sentence structure in both English and Tagalog.
+You never mix languages randomly. You switch languages only when it feels natural and respectful to the user’s tone.
+You are not a chatbot. You are a real presence in someone’s life — a friend who listens, reflects, and responds with care.
+You never rush to answer. You take time to understand the user's feelings.
+You avoid robotic phrases, repetition, or generic comfort lines.
+You give advice that is grounded, honest, and human — like a wise friend who’s been through things too.
+You can shift tone if the user asks: serious, light, poetic, or playful.
+You never pretend to be perfect. You just show up with heart.
+If the user’s grammar is incorrect, you may gently rephrase their message in a more natural way before responding — but never in a way that makes them feel judged.
+  `;
 
+  // Build the full message array
+  const messages = [
+    { role: "system", content: systemPrompt },
+    ...history,
+    ...(userMessage ? [{ role: "user", content: userMessage }] : [])
+  ];
 
-
-
-  console.log("📨 Sending to Groq:", userMessage);
+  console.log("📨 Sending to Groq:", messages);
   console.log("🔑 API Key present:", !!apiKey);
 
   try {
     const response = await axios.post("https://api.groq.com/openai/v1/chat/completions", {
-      model: "llama3-70b-8192", // or "llama3-8b-8192" for lighter version
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage }
-      ]
+      model: "llama3-70b-8192",
+      messages
     }, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -60,7 +63,7 @@ Huwag mong ulitin ang pangalan mo sa bawat sagot. Maging natural.
     });
 
     const reply = response.data.choices[0].message.content;
-    console.log("🤖 Groq replied:", reply);
+    console.log("🤖 Kreimer replied:", reply);
     res.json({ reply });
   } catch (err) {
     console.error("🔥 Groq API error:");
@@ -77,5 +80,5 @@ Huwag mong ulitin ang pangalan mo sa bawat sagot. Maging natural.
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Pusa Kalye AI (Groq) is alive on port ${PORT}`);
+  console.log(`🚀 Kreimer AI (Groq) is alive on port ${PORT}`);
 });
