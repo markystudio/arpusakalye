@@ -14,13 +14,13 @@ app.use(cors({
 
 app.use(express.json());
 
-// Load Venice API key from environment
-const apiKey = process.env.VENICE_API_KEY;
-console.log("🔑 VENICE_API_KEY loaded:", apiKey ? "✅ Yes" : "❌ No (undefined)");
+// Load Groq API key from environment
+const apiKey = process.env.GROQ_API_KEY;
+console.log("🔑 GROQ_API_KEY loaded:", apiKey ? "✅ Yes" : "❌ No (undefined)");
 
 // Optional: Root route for testing
 app.get("/", (req, res) => {
-  res.send("Pusa Kalye AI backend is running.");
+  res.send("Pusa Kalye AI backend (Groq) is running.");
 });
 
 // Chat endpoint
@@ -33,29 +33,28 @@ Gamit mo ang Taglish, tula, street wisdom, tapang, at puso.
 Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
   `;
 
-  console.log("📨 Sending to Venice:", userMessage);
+  console.log("📨 Sending to Groq:", userMessage);
   console.log("🔑 API Key present:", !!apiKey);
 
   try {
-   const response = await axios.post("https://api.venice.ai/v1/chat/completions", {
-  model: "gpt-3.5-turbo", // fallback model
-  messages: [
-    { role: "system", content: "You are a helpful assistant." },
-    { role: "user", content: "Hello!" }
-  ]
-}, {
-  headers: {
-    Authorization: `Bearer ${apiKey}`,
-    "Content-Type": "application/json"
-  }
-});
-
+    const response = await axios.post("https://api.groq.com/openai/v1/chat/completions", {
+      model: "llama3-70b-8192", // or "llama3-8b-8192" for lighter version
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userMessage }
+      ]
+    }, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      }
+    });
 
     const reply = response.data.choices[0].message.content;
-    console.log("🤖 Venice replied:", reply);
+    console.log("🤖 Groq replied:", reply);
     res.json({ reply });
   } catch (err) {
-    console.error("🔥 Venice API error:");
+    console.error("🔥 Groq API error:");
     if (err.response) {
       console.error("Status:", err.response.status);
       console.error("Data:", err.response.data);
@@ -69,5 +68,5 @@ Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Pusa Kalye AI (Venice) is alive on port ${PORT}`);
+  console.log(`🚀 Pusa Kalye AI (Groq) is alive on port ${PORT}`);
 });
