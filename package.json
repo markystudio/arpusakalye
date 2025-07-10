@@ -2,9 +2,9 @@
   "name": "pusa-kalye-ai",
   "version": "1.0.0",
   "description": "Express backend for Pusa Kalye AI using Venice",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "engines": {
     "node": "18"
