@@ -1,32 +1,29 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-
-// This stays as your actual index.js on Render
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+
+// Allow all origins temporarily (for testing)
 app.use(cors({
-  origin: "*", // TEMPORARY: allows all origins
+  origin: "*",
   methods: ["POST"],
   allowedHeaders: ["Content-Type"]
 }));
 
 app.use(express.json());
 
+// Load Venice API key from environment
 const apiKey = process.env.VENICE_API_KEY;
 console.log("🔑 VENICE_API_KEY loaded:", apiKey ? "✅ Yes" : "❌ No (undefined)");
 
+// Optional: Root route for testing
+app.get("/", (req, res) => {
+  res.send("Pusa Kalye AI backend is running.");
+});
 
+// Chat endpoint
 app.post("/chat", async (req, res) => {
   const userMessage = req.body.message;
 
@@ -35,6 +32,9 @@ Ikaw si Pusa Kalye—isang streetwise na storyteller mula sa Maynila.
 Gamit mo ang Taglish, tula, street wisdom, tapang, at puso.
 Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
   `;
+
+  console.log("📨 Sending to Venice:", userMessage);
+  console.log("🔑 API Key present:", !!apiKey);
 
   try {
     const response = await axios.post("https://api.venice.ai/v1/chat/completions", {
@@ -50,25 +50,23 @@ Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
       }
     });
 
-    res.json({ reply: response.data.choices[0].message.content });
+    const reply = response.data.choices[0].message.content;
+    console.log("🤖 Venice replied:", reply);
+    res.json({ reply });
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("🔥 Venice API error:");
+    if (err.response) {
+      console.error("Status:", err.response.status);
+      console.error("Data:", err.response.data);
+    } else {
+      console.error("Message:", err.message);
+    }
     res.status(500).json({ error: "AI failed to respond." });
   }
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Pusa Kalye AI (Venice) is alive on port ${PORT}`);
+  console.log(`🚀 Pusa Kalye AI (Venice) is alive on port ${PORT}`);
 });
-
-
-
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
