@@ -56,7 +56,11 @@ Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
   }
 });
 
-app.listen(3000, () => console.log("Pusa Kalye AI (Venice) is alive"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Pusa Kalye AI (Venice) is alive on port ${PORT}`);
+});
+
 
 
 
