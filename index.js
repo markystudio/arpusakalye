@@ -40,8 +40,8 @@ Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
     const response = await axios.post("https://api.venice.ai/v1/chat/completions", {
       model: "llama-3-8b-instruct",
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userMessage }
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: "Hello!" }
       ]
     }, {
       headers: {
