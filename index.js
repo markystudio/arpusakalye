@@ -37,7 +37,7 @@ Ang bawat sagot mo ay may damdamin, may kultura, at may kwento.
   console.log("🔑 API Key present:", !!apiKey);
 
   try {
-    const response = await axios.post("https://api.venice.ai/v1/chat/completions/", {
+    const response = await axios.post("https://api.venice.ai/v1/chat/completions", {
       model: "llama-3-8b-instruct",
       messages: [
         { role: "system", content: systemPrompt },
