@@ -16,7 +16,7 @@ app.use(express.json());
 
 // Load Groq API key from environment
 const apiKey = process.env.marky_studio_ai;
-console.log("🔑 GROQ_API_KEY loaded:", apiKey ? "✅ Yes" : "❌ No (undefined)");
+console.log("🔑 marky_studio_ai loaded:", apiKey ? "✅ Yes" : "❌ No (undefined)");
 
 // Optional: Root route for testing
 app.get("/", (req, res) => {
